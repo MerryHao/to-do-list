@@ -25,6 +25,7 @@ db.once('open', () => {
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+app.use(express.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
   Todo.find() //取出Todo model裡的所有資料
@@ -33,6 +34,16 @@ app.get('/', (req, res) => {
     .catch(error => console.error(error)) //錯誤處理
 })
 
+app.get('/todos/new', (req, res) => {
+  return res.render('new')
+})
+
+app.post('/todos', (req, res) => {
+  const name = req.body.name // 從 req.body 拿出表單裡的 name 資料
+  return Todo.create({name}) // 存入資料庫
+    .then(() => res.redirect('/')) // 新增完成後導回首頁
+    .catch(error => console.log(error))
+})
 
 app.listen(port, () => {
   console.log(`Express is running on http://localhost:${port}`)
