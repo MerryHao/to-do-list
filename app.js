@@ -63,10 +63,17 @@ app.get('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
-  const name = req.body.name
+  const { name, isDone } = req.body
   return Todo.findById(id) //查詢資料
     .then(todo => { //如果查詢成功，修改後重新儲存資料
       todo.name = name
+      todo.isDone = isDone === 'on'
+      // 上面位下面的縮寫
+      // if (isDone === 'on') {
+      //   todo.isDone = true
+      // } else {
+      //   todo.isDone = false
+      // }
       return todo.save()
     })
     .then(() => res.redirect(`/todos/${id}`)) //如果儲存成功，導向首頁
