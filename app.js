@@ -30,6 +30,7 @@ app.use(express.urlencoded({extended: true}))
 app.get('/', (req, res) => {
   Todo.find() //取出Todo model裡的所有資料
     .lean() //把Mongoose的Model物件轉換成乾淨的JavaScript資料陣列
+    .sort({ _id: 'asc'}) // asc sorting
     .then(todos => res.render('index', {todos})) //將樣板資料傳給index樣板
     .catch(error => console.error(error)) //錯誤處理
 })
